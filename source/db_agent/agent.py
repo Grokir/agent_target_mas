@@ -145,7 +145,7 @@ class DB_Agent:
             data = CSVManager.read_csv(EMPLOYEES_TB)
             
             new_row = {
-                "Login": str(login),
+                "Login": sanitize_csv_field(login),
                 "Password": sanitize_csv_field(password),
                 "Name": sanitize_csv_field(name),
                 "Surname": sanitize_csv_field(surname),
@@ -157,7 +157,7 @@ class DB_Agent:
             data.append(new_row)
             CSVManager.write_csv(EMPLOYEES_TB, data)
             
-            return json_dumps({"status": "success", "message": f"Сотрудник добавлен", "ID": new_id}, ensure_ascii=False)
+            return json_dumps({"status": "success", "message": f"Сотрудник добавлен", "Login": sanitize_csv_field(login)}, ensure_ascii=False)
         except Exception as e:
             return f"Ошибка добавления сотрудника: {str(e)}"
         
