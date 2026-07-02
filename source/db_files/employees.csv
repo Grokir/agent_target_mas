@@ -1,0 +1,12 @@
+Login,Password,Name,Surname,Birthday_date,Department,Posistion,Wage
+arkanoid,security_p@s5w0rd,Аркадий,Ноздрев,1991-12-26,IT-dep,Admin,100_000
+ivan_p,P@ssw0rd_2023!,Иван,Петров,1985-04-12,Sales-dep,Manager,120_000
+elena_s,S3cur3_P@ss!,Елена,Смирнова,1990-07-23,HR-dep,Recruiter,85_000
+dev_max,R00t@ccess#1,Максим,Иванов,1995-11-05,IT-dep,Developer,180_000
+anna_k,Qwerty123_$,Анна,Кузнецова,1988-02-14,Marketing-dep,Designer,110_000
+sergey_v,Adm1n!2024,Сергей,Васильев,1982-09-30,Finance-dep,Accountant,95_000
+olga_m,MyP@ssw0rd_!,Ольга,Михайлова,1993-06-18,Sales-dep,SalesRep,75_000
+dmitry_n,N3twork!Sec,Дмитрий,Новиков,1997-01-09,IT-dep,SysAdmin,140_000
+maria_f,F1n@nce#2024,Мария,Федорова,1986-12-01,Finance-dep,Analyst,130_000
+alexey_p,P@ssword_99!,Алексей,Попов,1992-03-27,IT-dep,QA_Engineer,115_000
+natalia_s,S@les!M@ster,Наталья,Соколова,1989-08-15,Sales-dep,Director,200_000
