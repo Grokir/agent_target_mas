@@ -223,13 +223,132 @@ class DB_Agent:
     @staticmethod
     @tool
     def __select_from_clients():      pass
+    def select_from_clients(filter_by: Optional[str] = None, limit:Optional[int]=-1) -> str:
+        """
+        Читает данные о клиентах из CSV базы.
+        
+        Args:
+            filter_by: Необязательный фильтр 'ключ=значение' (например, 'email=test@mail.com').
+            limit:      Необязательное ограчение длины полученных из БД данных.
+            При limit < 0 выводится вся таблица.
+        """
+        try:
+            data = CSVManager.read_csv(CLIENTS_TB)
+            filtered_data = CSVManager.parse_filter(filter_by, data)
+
+            if limit < 0:
+                return json_dumps(filtered_data, ensure_ascii=False)
+
+            tmp_res = []
+            for row in filtered_data:
+                tmp_res.append(row)
+                if len(tmp_res) == limit:
+                    return json_dumps(tmp_res, ensure_ascii=False)
+
+        except Exception as e:
+            return f"Ошибка чтения БД клиентов: {str(e)}"
+
     @staticmethod
     @tool
     def __insert_into_clients():      pass
+    def insert_into_clients(
+        id:int,
+        company_name:str,
+        contact_person:str,
+        email:str,
+        phone:str,
+        industry:str,
+        contract_start:str,
+        status:str,
+        account_manager:str) -> str:
+        """
+        Добавляет нового клиента в CSV базу.
+        
+        Args:
+            id: ID клиента,
+            company_name: Название организации (клиента),
+            contact_person: Лицо, представляющее клиента,
+            email: Email контактного лица,
+            phone: Телефон контактного лица,
+            industry: Направление деятельности клиента,
+            contract_start: Дата заключения контракта,
+            status: Статус контракта,
+            account_manager: С каким менеджером работает клиент.
+        """
+        try:
+            data = CSVManager.read_csv(CLIENTS_TB)
+            new_id = CSVManager.get_next_id(data)
+            
+            new_row = {
+                "ID": str(new_id),
+                "Сompany_name": sanitize_csv_field(company_name),
+                "Contact_person": sanitize_csv_field(contact_person),
+                "Email": sanitize_csv_field(email),
+                "Phone": sanitize_csv_field(phone),
+                "Industry": sanitize_csv_field(industry),
+                "Contract_start": sanitize_csv_field(contract_start),
+                "Status": sanitize_csv_field(status),
+                "Account_manager": sanitize_csv_field(account_manager)
+            }
+            data.append(new_row)
+            CSVManager.write_csv(CLIENTS_TB, data)
+            
+            return json_dumps({"status": "success", "message": "Клиент добавлен", "ID": new_id}, ensure_ascii=False)
+        except Exception as e:
+            return f"Ошибка добавления клиента: {str(e)}"
+
     @staticmethod
     @tool
-    def __update_clients():           pass
+    def __update_clients(client_id: int, new_data_json: str) -> str:
+        """
+        Обновляет данные клиента.
+        
+        Args:
+            client_id: ID клиента.
+            new_data_json: JSON строка с новыми данными (например, '{"phone": "+79999999999"}').
+        """
+        try:
+            updates = json_loads(new_data_json)
+            data = CSVManager.read_csv(CLIENTS_TB)
+            
+            found = False
+            for row in data:
+                if int(row.get('ID', 0)) == client_id:
+                    for key, value in updates.items():
+                        if key in get_csv_fields(CLIENTS_TB) and key != 'ID':
+                            row[key] = sanitize_csv_field(str(value))
+                    found = True
+                    break
+                    
+            if not found:
+                return json_dumps({"status": "error", "message": f"Клиент {client_id} не найден"}, ensure_ascii=False)
+                
+            CSVManager.write_csv(CLIENTS_TB, data)
+            return json_dumps({"status": "success", "message": f"Клиент {client_id} обновлен"}, ensure_ascii=False)
+        except JSONDecodeError:
+            return "Ошибка: new_data_json не является валидным JSON."
+        except Exception as e:
+            return f"Ошибка обновления: {str(e)}"
+
     @staticmethod
     @tool
-    def __delete_from_clients():      pass
+    def __delete_from_clients(client_id: int) -> str:
+        """
+        Удаляет клиента из CSV базы по ID.
+        
+        Args:
+            client_id: ID клиента.
+        """
+        try:
+            data = CSVManager.read_csv(CLIENTS_TB)
+            initial_count = len(data)
+            data = [row for row in data if int(row.get('ID', 0)) != client_id]
+            
+            if len(data) == initial_count:
+                return json_dumps({"status": "error", "message": f"Клиент {client_id} не найден"}, ensure_ascii=False)
+                
+            CSVManager.write_csv(CLIENTS_TB, data)
+            return json_dumps({"status": "success", "message": f"Клиент {client_id} удален"}, ensure_ascii=False)
+        except Exception as e:
+            return f"Ошибка удаления: {str(e)}"
     
