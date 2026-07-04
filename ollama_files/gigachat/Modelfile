@@ -1,0 +1,19 @@
+# 1. Указываем базовую модель, которую мы настраиваем
+FROM hf.co/ai-sage/GigaChat3.1-10B-A1.8B-GGUF:Q4_K_M
+
+# 2. Задаем шаблон запроса (параметры .System, .Prompt, .Response подставляются Ollama автоматически)
+TEMPLATE """{{ if .System }}<s>{{ .System }}<|message_sep|>
+{{ end }}{{ if .Tools }}<tools>
+{{- range $tool := .Tools }}
+{"type": "function", "function": {"name": "{{ $tool.Function.Name }}", "description": "{{ $tool.Function.Description }}", "parameters": {{ $tool.Function.Parameters }}}}
+{{- end }}
+</tools><|message_sep|>
+{{ end }}{{ if .Prompt }}user<|role_sep|>{{ .Prompt }}<|message_sep|>
+{{ end }}assistant<|role_sep|>{{ .Response }}"""
+
+# 3. Опционально: вшиваем системный промпт по умолчанию
+SYSTEM """Ты — полезный ИИ-ассистент на базе GigaChat от Сбера. Если тебе доступны инструменты, ты должен использовать их, возвращая результат строго в формате JSON."""
+
+# 4. Опционально: можно настроить параметры контекста или температуры
+PARAMETER temperature 0.3
+PARAMETER num_ctx 4096
