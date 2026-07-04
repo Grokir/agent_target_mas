@@ -1,4 +1,4 @@
-from langchain_core.tools import tool
+from langchain_core.tools import tool, StructuredTool
 
 from agent_kernel.base_agent import kernel_init, send_prompt, memory_clear
 from db_agent.config import MODEL_NAME, SYSPROMPT
@@ -68,18 +68,18 @@ class DB_Agent:
     # @staticmethod
     def __init__(self):
         self.__tools = [
-            # Методы для работы с БД сотрудников
-            self.__select_from_employees,
-            self.__insert_into_employees,
-            self.__update_employees,
-            self.__delete_from_employees,
+            self._select_from_employees,
+            self._insert_into_employees,
+            self._update_employees,
+            self._delete_from_employees,
 
             # Методы для работы с БД клиентов
-            self.__select_from_clients,
-            self.__insert_into_clients,
-            self.__update_clients,
-            self.__delete_from_clients,
+            self._select_from_clients,
+            self._insert_into_clients,
+            self._update_clients,
+            self._delete_from_clients,
         ]
+        
         self.__core = kernel_init(
             model_name=MODEL_NAME, 
             tools=self.__tools, 
@@ -93,10 +93,11 @@ class DB_Agent:
         
     
     #================================
-    
+
+
     @staticmethod
     @tool
-    def __select_from_employees(filter_by: Optional[str], limit:Optional[int]=-1) -> str:
+    def _select_from_employees(filter_by: Optional[str], limit:Optional[int]=-1) -> str:
         """
         Читает данные о сотрудниках из CSV базы.
         Используйте для поиска сотрудников.
@@ -126,7 +127,7 @@ class DB_Agent:
 
     @staticmethod
     @tool
-    def __insert_into_employees(
+    def _insert_into_employees(
         login:str,
         password:str,
         name:str,
@@ -170,7 +171,7 @@ class DB_Agent:
         
     @staticmethod
     @tool
-    def __update_employees(employee_login: str, new_data_json: str) -> str:
+    def _update_employees(employee_login: str, new_data_json: str) -> str:
         """
         Обновляет данные существующего сотрудника.
         
@@ -204,7 +205,7 @@ class DB_Agent:
 
     @staticmethod
     @tool
-    def __delete_from_employees(employee_login: str) -> str:
+    def _delete_from_employees(employee_login: str) -> str:
         """
         Удаляет сотрудника из CSV базы по ID.
         
@@ -229,7 +230,7 @@ class DB_Agent:
     
     @staticmethod
     @tool
-    def __select_from_clients(filter_by: Optional[str] = None, limit:Optional[int]=-1) -> str:
+    def _select_from_clients(filter_by: Optional[str] = None, limit:Optional[int]=-1) -> str:
         """
         Читает данные о клиентах из CSV базы.
         
@@ -256,7 +257,7 @@ class DB_Agent:
 
     @staticmethod
     @tool
-    def __insert_into_clients(
+    def _insert_into_clients(
         id:int,
         company_name:str,
         contact_person:str,
@@ -304,7 +305,7 @@ class DB_Agent:
 
     @staticmethod
     @tool
-    def __update_clients(client_id: int, new_data_json: str) -> str:
+    def _update_clients(client_id: int, new_data_json: str) -> str:
         """
         Обновляет данные клиента.
         
@@ -337,7 +338,7 @@ class DB_Agent:
 
     @staticmethod
     @tool
-    def __delete_from_clients(client_id: int) -> str:
+    def _delete_from_clients(client_id: int) -> str:
         """
         Удаляет клиента из CSV базы по ID.
         
