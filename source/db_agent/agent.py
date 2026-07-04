@@ -65,6 +65,7 @@ class CSVManager:
 
 
 class DB_Agent:
+    # @staticmethod
     def __init__(self):
         self.__tools = [
             # Методы для работы с БД сотрудников
@@ -82,8 +83,14 @@ class DB_Agent:
         self.__core = kernel_init(
             model_name=MODEL_NAME, 
             tools=self.__tools, 
-            sysprompt=SYSPROMPT
+            sysprompt=SYSPROMPT,
+            temp=0.0
         )
+
+    async def send_message(self, message:str):
+        """Возвращает текстовый ответ от ядра"""
+        return await send_prompt(self.__core, message)
+        
     
     #================================
     
@@ -222,8 +229,7 @@ class DB_Agent:
     
     @staticmethod
     @tool
-    def __select_from_clients():      pass
-    def select_from_clients(filter_by: Optional[str] = None, limit:Optional[int]=-1) -> str:
+    def __select_from_clients(filter_by: Optional[str] = None, limit:Optional[int]=-1) -> str:
         """
         Читает данные о клиентах из CSV базы.
         
@@ -250,8 +256,7 @@ class DB_Agent:
 
     @staticmethod
     @tool
-    def __insert_into_clients():      pass
-    def insert_into_clients(
+    def __insert_into_clients(
         id:int,
         company_name:str,
         contact_person:str,
