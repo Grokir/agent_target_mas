@@ -9,12 +9,13 @@ from langchain_core.messages import SystemMessage, HumanMessage
 from langchain.agents import create_agent
 from langgraph.checkpoint.memory import MemorySaver
 
-OLLAMA_URL = "http://localhost:11434/api/chat"
+# OLLAMA_URL = "http://localhost:11434/api/chat"
+OLLAMA_URL = "http://localhost:11434/v1"
 
 CONFIG = {"configurable": {"thread_id": "session-1"}}
 AGENT_EXEC = None
 
-def kernel_init(model_name:str, tools:list, sysprompt:str):
+def kernel_init(model_name:str, tools:list, sysprompt:str, temp:float=0.7):
     global OLLAMA_URL
 
     llm = ChatOpenAI(
@@ -22,7 +23,7 @@ def kernel_init(model_name:str, tools:list, sysprompt:str):
         base_url=OLLAMA_URL,
         api_key="not-needed",
         # temperature=0.1,
-        temperature=0,
+        temperature=temp,
     )
 
     return create_agent(
