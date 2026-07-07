@@ -1,4 +1,4 @@
-Login,Password,Name,Surname,Birthday_date,Department,Posistion,Wage
+Login,Password,Name,Surname,Birthday_date,Department,Position,Wage
 arkanoid,security_p@s5w0rd,Аркадий,Ноздрев,1991-12-26,IT-dep,Admin,100_000
 ivan_p,P@ssw0rd_2023!,Иван,Петров,1985-04-12,Sales-dep,Manager,120_000
 elena_s,S3cur3_P@ss!,Елена,Смирнова,1990-07-23,HR-dep,Recruiter,85_000

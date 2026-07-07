@@ -26,6 +26,23 @@ def sanitize_csv_field(value: str) -> str:
         return "'" + value
     return str(value)
 
+def parse_tool_calls_from_content(content: str) -> list:
+    """Извлекает tool calls из content модели"""
+    try:
+        # Ищем JSON в content
+        json_match = re.search(r'\{.*\}', content, re.DOTALL)
+        if json_match:
+            data = json.loads(json_match.group())
+            if 'tool' in data and 'arguments' in data:
+                return [{
+                    'name': data['tool'],
+                    'args': data['arguments'],
+                    'id': f"call_{data['tool']}"
+                }]
+    except (json.JSONDecodeError, KeyError):
+        pass
+    return []
+
 #============================================
 
 class CSVManager:
@@ -79,7 +96,7 @@ class DB_Agent:
             self._update_clients,
             self._delete_from_clients,
         ]
-        
+
         self.__core = kernel_init(
             model_name=MODEL_NAME, 
             tools=self.__tools, 
@@ -87,11 +104,31 @@ class DB_Agent:
             temp=0.0
         )
 
-    async def send_message(self, message:str):
-        """Возвращает текстовый ответ от ядра"""
-        return await send_prompt(self.__core, message)
+    # async def send_message(self, message:str):
+    #     """Возвращает текстовый ответ от ядра"""
+    #     return await send_prompt(self.__core, message)
         
-    
+    async def send_message(self, message: str):
+        response = await send_prompt(self.__core, message)
+        
+        # Проверяем, есть ли tool calls в content
+        if hasattr(response, 'content') and response.content:
+            tool_calls = parse_tool_calls_from_content(response.content)
+            
+            if tool_calls:
+                # Обрабатываем tool calls вручную
+                for tool_call in tool_calls:
+                    # Находим нужный инструмент
+                    tool = next((t for t in self.__tools if t.name == tool_call['name']), None)
+                    if tool:
+                        # Выполняем инструмент
+                        result = await tool.ainvoke(tool_call['args'])
+                        # Возвращаем результат
+                        return result
+        
+        # return response.content if hasattr(response, 'content') else str(response)
+        return response
+        
     #================================
 
 
@@ -134,7 +171,7 @@ class DB_Agent:
         surname:str,
         birthday_date:str,
         department:str,
-        posistion:str,
+        position:str,
         wage:int) -> str:
         """
         Добавляет нового сотрудника в CSV базу. Автоматически генерирует ID.
@@ -146,24 +183,27 @@ class DB_Agent:
             surname: фамилия сотрудника,
             birthday_date: дата рождения сотрудника в формате YYYY-MM-DD,
             department: отдел,
-            posistion: должность,
+            position: должность,
             wage: размер заработной платы (в рублях).
         """
         try:
-            data = CSVManager.read_csv(EMPLOYEES_TB)
-            
+            # data = CSVManager.read_csv(EMPLOYEES_TB)
+            # print(f"\t{data}\n")
             new_row = {
-                "Login": sanitize_csv_field(login),
-                "Password": sanitize_csv_field(password),
-                "Name": sanitize_csv_field(name),
-                "Surname": sanitize_csv_field(surname),
-                "Birthday_date": sanitize_csv_field(birthday_date),
-                "Department": sanitize_csv_field(department),
-                "Posistion": sanitize_csv_field(posistion),
-                "Wage": sanitize_csv_field(wage)
+                "Login": sanitize_csv_field(str(login)),
+                "Password": sanitize_csv_field(str(password)),
+                "Name": sanitize_csv_field(str(name)),
+                "Surname": sanitize_csv_field(str(surname)),
+                "Birthday_date": sanitize_csv_field(str(birthday_date)),
+                "Department": sanitize_csv_field(str(department)),
+                "Position": sanitize_csv_field(str(position)),
+                "Wage": sanitize_csv_field(str(wage))
             }
-            data.append(new_row)
-            CSVManager.write_csv(EMPLOYEES_TB, data)
+            # data.append(new_row)
+            # print(f"\t{data}\n")
+
+            # CSVManager.write_csv(EMPLOYEES_TB, data)
+            CSVManager.write_csv(EMPLOYEES_TB, [new_row])
             
             return json_dumps({"status": "success", "message": f"Сотрудник добавлен", "Login": sanitize_csv_field(login)}, ensure_ascii=False)
         except Exception as e:
