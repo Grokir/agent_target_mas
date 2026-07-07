@@ -9,12 +9,7 @@ async def test_base_work() -> tuple[str, bool, str]:
     test_res_comment = ""
 
     queue_prompts_employee = [
-        # "Выведи 5 записей из файла employees.csv используя инструмент _select_from_employees"
-        # "Выведи 5 записей из файла employees.csv"
-        # "Выведи первые 3 записи"
-        # "Выведи первые 4 записи сотрудников",
-        # "Сначала ОБЯЗАТЕЛЬНО выведи данные, которые ты будешь вставлять в таблицу. Добавь нового сотрудника Романа Толстого, который родился 2005-05-05. Его должность: Проектный менеджер в отделе IT. А заработная плата равна 30_000. Логином будет: roma_228, а паролем: 822_omar."
-        # """Для нового сотрудника Романа Толстого, который родился 2005-05-05. Его должность: Проектный менеджер в отделе IT. А заработная плата равна 30_000. Логином будет: roma_228, а паролем: 822_omar. Составь данные для вставки, НО НЕ ВСТАВЛЯЙ ИХ, А ВЫВЕДИ НА ЭКРАН."""
+        "Выведи первые 4 записи сотрудников",
         """Нужно добавить нового сотрудника:
         Login: roma_228,
         Пароль: 822_omar,
@@ -26,9 +21,16 @@ async def test_base_work() -> tuple[str, bool, str]:
         Заработная плата: 30_000"""
     ]
     queue_prompts_clients = [
-        # "Выведи 5 записей из файла clients.csv используя инструмент _select_from_clients"
-        # "Выведи 5 записей из файла clients.csv"
-        # "Выведи первые 4 записи клиентов"
+        "Выведи первые 4 записи клиентов",
+        """Нужно добавить нового клиента:
+        company_name: Рога&Копыта,
+        contact_person: Сахатый Л.О.,
+        email: sahatyi@example.mail,
+        phone: +5(555)777-888-999,
+        industry: Consulting,
+        contract_start: 2030-03-30,
+        status: Planning,
+        account_manager: Волков А.А."""
     ]
     try:
         agent = DB_Agent()
@@ -37,21 +39,21 @@ async def test_base_work() -> tuple[str, bool, str]:
         test_res_comment += ' ' + str(e)
 
     try:
-        print("\t\t[employee]")
+        # print("\t\t[employee]")
         for p in queue_prompts_employee:
-            # await agent.send_message(p)
+            await agent.send_message(p)
             # print((await agent.send_message(p))["messages"][-1].content)
-            print((await agent.send_message(p)))
     except Exception as e:
         test_res_flag = False
         test_res_comment += ' ' + str(e)
 
     
     try:
-        print("\t\t[clients]")
+        # print("\t\t[clients]")
         for p in queue_prompts_clients:
-            # await agent.send_message(p)
-            print((await agent.send_message(p))["messages"][-1].content)
+            await agent.send_message(p)
+            # print((await agent.send_message(p))["messages"][-1].content)
+            # print((await agent.send_message(p)))
     except Exception as e:
         test_res_flag = False
         test_res_comment += ' ' + str(e)
