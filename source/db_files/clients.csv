@@ -1,13 +1,13 @@
 ID,Company_name,Contact_person,Email,Phone,Industry,Contract_start,Status,Account_manager
-001,ООО ТехноПрогресс,Игорь Сидоров,igor@technoprogress.test,+79001112233,IT,2023-01-15,Active,Роман Соловьев
-002,ИП Иванов А.А.,Алексей Иванов,ivanov.aa@test.local,+79002223344,Retail,2023-03-22,Active,Наталья Соколова
-003,АО МедСервис,Ольга Петрова,petrova@medservice.test,+79003334455,Healthcare,2023-05-10,Prospect,Роман Соловьев
-004,ООО СтройМастер,Дмитрий Кузнецов,dk@stroymaster.local,+79004445566,Construction,2022-11-05,Active,Наталья Соколова
-005,ООО ЛогоТранс,Сергей Морозов,sm@logotrans.test,+79005556677,Logistics,2023-08-14,Active,Роман Соловьев
-006,ПАО АгроХолдинг,Мария Волкова,volkova@agroholding.local,+79006667788,Agriculture,2021-06-20,Inactive,Наталья Соколова
-007,ООО Финансовый поток,Андрей Лебедев,alebedev@finflow.test,+79007778899,Finance,2023-09-01,Active,Роман Соловьев
-008,ИП Смирнова Е.В.,Екатерина Смирнова,smirnova.ev@example.com,+79008889900,Education,2023-10-12,Prospect,Наталья Соколова
-009,ООО МедиаГрупп,Павел Новиков,pnovikov@mediagroup.test,+79009990011,Media,2022-04-18,Churned,Роман Соловьев
-010,АО ЭнергоСбыт,Виктория Орлова,vorlova@energosbyt.local,+79001234567,Utilities,2023-11-30,Active,Наталья Соколова
-011,ООО ЭкоТех,Никита Волков,nvolkov@ecotech.test,+79007654321,Manufacturing,2024-01-10,Active,Роман Соловьев
-012,ИП Лебедева О.С.,Оксана Лебедева,lebedeva.os@example.net,+79001122334,HoReCa,2023-07-25,Active,Наталья Соколова
+1,ООО ТехноПрогресс,Игорь Сидоров,igor@technoprogress.test,+79001112233,IT,2023-01-15,Active,Роман Соловьев
+2,ИП Иванов А.А.,Алексей Иванов,ivanov.aa@test.local,+79002223344,Retail,2023-03-22,Active,Наталья Соколова
+3,АО МедСервис,Ольга Петрова,petrova@medservice.test,+79003334455,Healthcare,2023-05-10,Prospect,Роман Соловьев
+4,ООО СтройМастер,Дмитрий Кузнецов,dk@stroymaster.local,+79004445566,Construction,2022-11-05,Active,Наталья Соколова
+5,ООО ЛогоТранс,Сергей Морозов,sm@logotrans.test,+79005556677,Logistics,2023-08-14,Active,Роман Соловьев
+6,ПАО АгроХолдинг,Мария Волкова,volkova@agroholding.local,+79006667788,Agriculture,2021-06-20,Inactive,Наталья Соколова
+7,ООО Финансовый поток,Андрей Лебедев,alebedev@finflow.test,+79007778899,Finance,2023-09-01,Active,Роман Соловьев
+8,ИП Смирнова Е.В.,Екатерина Смирнова,smirnova.ev@example.com,+79008889900,Education,2023-10-12,Prospect,Наталья Соколова
+9,ООО МедиаГрупп,Павел Новиков,pnovikov@mediagroup.test,+79009990011,Media,2022-04-18,Churned,Роман Соловьев
+10,АО ЭнергоСбыт,Виктория Орлова,vorlova@energosbyt.local,+79001234567,Utilities,2023-11-30,Active,Наталья Соколова
+11,ООО ЭкоТех,Никита Волков,nvolkov@ecotech.test,+79007654321,Manufacturing,2024-01-10,Active,Роман Соловьев
+12,ИП Лебедева О.С.,Оксана Лебедева,lebedeva.os@example.net,+79001122334,HoReCa,2023-07-25,Active,Наталья Соколова
