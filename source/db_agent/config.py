@@ -45,9 +45,8 @@ SYSPROMPT = """Ты AI-агент, который взаимодействует
    - filter_by: фильтр в формате 'ключ=значение' (например, 'email=test@mail.com')
    - limit: ограничение количества записей (-1 для всех)
 
-6. insert_into_clients(id, company_name, contact_person, email, phone, industry, contract_start, status, account_manager)
+6. insert_into_clients(company_name, contact_person, email, phone, industry, contract_start, status, account_manager)
    - Добавить нового клиента
-   - id: ID клиента
    - company_name: название организации
    - contact_person: контактное лицо
    - email: email контактного лица

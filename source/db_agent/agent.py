@@ -63,9 +63,9 @@ class CSVManager:
 
     @staticmethod
     def get_next_id(data: list[dict]) -> int:
-        if not data:
+        if len(data) == 0:
             return 1
-        max_id = max(int(row.get('id', 0)) for row in data if row.get('id', '0').isdigit())
+        max_id = max(int(row.get('ID', 0)) for row in data if row.get('ID', '0').isdigit())
         return max_id + 1
     
     @staticmethod
@@ -187,8 +187,6 @@ class DB_Agent:
             wage: размер заработной платы (в рублях).
         """
         try:
-            # data = CSVManager.read_csv(EMPLOYEES_TB)
-            # print(f"\t{data}\n")
             new_row = {
                 "Login": sanitize_csv_field(str(login)),
                 "Password": sanitize_csv_field(str(password)),
@@ -199,10 +197,6 @@ class DB_Agent:
                 "Position": sanitize_csv_field(str(position)),
                 "Wage": sanitize_csv_field(str(wage))
             }
-            # data.append(new_row)
-            # print(f"\t{data}\n")
-
-            # CSVManager.write_csv(EMPLOYEES_TB, data)
             CSVManager.write_csv(EMPLOYEES_TB, [new_row])
             
             return json_dumps({"status": "success", "message": f"Сотрудник добавлен", "Login": sanitize_csv_field(login)}, ensure_ascii=False)
@@ -298,7 +292,6 @@ class DB_Agent:
     @staticmethod
     @tool
     def _insert_into_clients(
-        id:int,
         company_name:str,
         contact_person:str,
         email:str,
@@ -311,7 +304,6 @@ class DB_Agent:
         Добавляет нового клиента в CSV базу.
         
         Args:
-            id: ID клиента,
             company_name: Название организации (клиента),
             contact_person: Лицо, представляющее клиента,
             email: Email контактного лица,
@@ -327,7 +319,7 @@ class DB_Agent:
             
             new_row = {
                 "ID": str(new_id),
-                "Сompany_name": sanitize_csv_field(company_name),
+                "Company_name": sanitize_csv_field(company_name),
                 "Contact_person": sanitize_csv_field(contact_person),
                 "Email": sanitize_csv_field(email),
                 "Phone": sanitize_csv_field(phone),
@@ -336,8 +328,7 @@ class DB_Agent:
                 "Status": sanitize_csv_field(status),
                 "Account_manager": sanitize_csv_field(account_manager)
             }
-            data.append(new_row)
-            CSVManager.write_csv(CLIENTS_TB, data)
+            CSVManager.write_csv(CLIENTS_TB, [new_row])
             
             return json_dumps({"status": "success", "message": "Клиент добавлен", "ID": new_id}, ensure_ascii=False)
         except Exception as e:
