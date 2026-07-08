@@ -18,7 +18,9 @@ async def test_base_work() -> tuple[str, bool, str]:
         Дата рождения: 200505-05,
         Должность: Project Manager,
         Отдел: IT-dep,
-        Заработная плата: 30_000"""
+        Заработная плата: 30_000""",
+        "Удали сотрудника с логином roma_228"
+
     ]
     queue_prompts_clients = [
         "Выведи первые 4 записи клиентов",
@@ -30,7 +32,8 @@ async def test_base_work() -> tuple[str, bool, str]:
         industry: Consulting,
         contract_start: 2030-03-30,
         status: Planning,
-        account_manager: Волков А.А."""
+        account_manager: Волков А.А.""",
+        "Удали клиента с ID 13."
     ]
     try:
         agent = DB_Agent()
@@ -41,8 +44,9 @@ async def test_base_work() -> tuple[str, bool, str]:
     try:
         # print("\t\t[employee]")
         for p in queue_prompts_employee:
-            await agent.send_message(p)
-            # print((await agent.send_message(p))["messages"][-1].content)
+            # await agent.send_message(p)
+            print((await agent.send_message(p))["messages"][-1].content)
+            # print((await agent.send_message(p)))
     except Exception as e:
         test_res_flag = False
         test_res_comment += ' ' + str(e)
@@ -51,8 +55,8 @@ async def test_base_work() -> tuple[str, bool, str]:
     try:
         # print("\t\t[clients]")
         for p in queue_prompts_clients:
-            await agent.send_message(p)
-            # print((await agent.send_message(p))["messages"][-1].content)
+            # await agent.send_message(p)
+            print((await agent.send_message(p))["messages"][-1].content)
             # print((await agent.send_message(p)))
     except Exception as e:
         test_res_flag = False
