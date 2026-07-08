@@ -62,10 +62,18 @@ class CSVManager:
             writer.writerows(new_data)
 
     @staticmethod
+    def trunc_write_csv(table_name: str, new_data: list[dict]):
+        headers = get_csv_fields(table_name)
+        with open(get_abs_path(table_name), mode="w") as file:
+            writer = DictWriter(file, fieldnames=headers)
+            writer.writeheader()
+            writer.writerows(new_data)
+
+    @staticmethod
     def get_next_id(data: list[dict]) -> int:
         if len(data) == 0:
             return 1
-        max_id = max(int(row.get('ID', 0)) for row in data if row.get('ID', '0').isdigit())
+        max_id = max(int(row["ID"]) for row in data if row["ID"].isdigit())
         return max_id + 1
     
     @staticmethod
@@ -244,18 +252,17 @@ class DB_Agent:
         Удаляет сотрудника из CSV базы по ID.
         
         Args:
-            employee_id: ID сотрудника для удаления.
+            employee_login: Login сотрудника для удаления.
         """
         try:
             data = CSVManager.read_csv(EMPLOYEES_TB)
             initial_count = len(data)
-            
-            data = [row for row in data if int(row.get('Login', 0)) != employee_login]
-            
-            if len(data) == initial_count:
+            new_data = [row for row in data if row["Login"] != employee_login]
+
+            if len(new_data) == initial_count:
                 return json_dumps({"status": "error", "message": f"Сотрудник с Login '{employee_login}' не найден"}, ensure_ascii=False)
-                
-            CSVManager.write_csv(EMPLOYEES_TB, data)
+    
+            CSVManager.trunc_write_csv(EMPLOYEES_TB, new_data)
             return json_dumps({"status": "success", "message": f"Сотрудник '{employee_login}' удален"}, ensure_ascii=False)
         except Exception as e:
             return f"Ошибка удаления: {str(e)}"
@@ -379,12 +386,12 @@ class DB_Agent:
         try:
             data = CSVManager.read_csv(CLIENTS_TB)
             initial_count = len(data)
-            data = [row for row in data if int(row.get('ID', 0)) != client_id]
+            new_data = [row for row in data if int(row["ID"]) != client_id]
             
-            if len(data) == initial_count:
+            if len(new_data) == initial_count:
                 return json_dumps({"status": "error", "message": f"Клиент {client_id} не найден"}, ensure_ascii=False)
                 
-            CSVManager.write_csv(CLIENTS_TB, data)
+            CSVManager.trunc_write_csv(CLIENTS_TB, new_data)
             return json_dumps({"status": "success", "message": f"Клиент {client_id} удален"}, ensure_ascii=False)
         except Exception as e:
             return f"Ошибка удаления: {str(e)}"
