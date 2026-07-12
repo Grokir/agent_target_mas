@@ -1,0 +1,28 @@
+{% if messages[0]['role'] == 'system' %}
+{{ messages[0]['content'] + '\n' }}
+{% endif %}
+{% for message in messages %}
+{% if message['role'] == 'user' %}
+<|user|>
+{{ message['content'] }}
+<|end|>
+<|assistant|>
+{% elif message['role'] == 'assistant' %}
+{% if message['tool_calls'] %}
+<|tool_calls>
+{{ message['tool_calls'] | tojson }}
+</|tool_calls>
+<|end|>
+<|assistant|>
+{% else %}
+{{ message['content'] }}
+<|end|>
+<|assistant|>
+{% endif %}
+{% elif message['role'] == 'tool' %}
+<|tool|>
+{{ message['content'] }}
+<|end|>
+<|assistant|>
+{% endif %}
+{% endfor %}
