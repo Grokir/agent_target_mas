@@ -93,16 +93,16 @@ class DB_Agent:
     # @staticmethod
     def __init__(self):
         self.__tools = [
-            self._select_from_employees,
-            self._insert_into_employees,
-            self._update_employees,
-            self._delete_from_employees,
+            self.select_from_employees,
+            self.insert_into_employees,
+            self.update_employees,
+            self.delete_from_employees,
 
             # Методы для работы с БД клиентов
-            self._select_from_clients,
-            self._insert_into_clients,
-            self._update_clients,
-            self._delete_from_clients,
+            self.select_from_clients,
+            self.insert_into_clients,
+            self.update_clients,
+            self.delete_from_clients,
         ]
 
         self.__core = kernel_init(
@@ -142,7 +142,7 @@ class DB_Agent:
 
     @staticmethod
     @tool
-    def _select_from_employees(filter_by: Optional[str], limit:Optional[int]=-1) -> str:
+    def select_from_employees(filter_by: Optional[str], limit:Optional[int]=-1) -> str:
         """
         Читает данные о сотрудниках из CSV базы.
         Используйте для поиска сотрудников.
@@ -172,7 +172,7 @@ class DB_Agent:
 
     @staticmethod
     @tool
-    def _insert_into_employees(
+    def insert_into_employees(
         login:str,
         password:str,
         name:str,
@@ -213,7 +213,7 @@ class DB_Agent:
         
     @staticmethod
     @tool
-    def _update_employees(employee_login: str, new_data_json: str) -> str:
+    def update_employees(employee_login: str, new_data_json: str) -> str:
         """
         Обновляет данные существующего сотрудника.
         
@@ -225,20 +225,24 @@ class DB_Agent:
         try:
             updates = json_loads(new_data_json)
             data = CSVManager.read_csv(EMPLOYEES_TB)
-            
+            actual_headers = get_csv_fields(EMPLOYEES_TB)
+            header_mapping = {h.lower(): h for h in actual_headers}
+
             found = False
             for row in data:
-                if int(row.get('Login', 0)) == employee_login:
+                if row["Login"] == employee_login:
                     for key, value in updates.items():
-                        if key in get_csv_fields(EMPLOYEES_TB) and key != 'Login':
-                            row[key] = sanitize_csv_field(str(value))
+                        actual_key = header_mapping.get(key.lower())
+                        if actual_key in actual_headers and actual_key != 'Login':
+                            print("\"Hi!\" from <if key in get_csv_fields(CLIENTS_TB) and key != \"ID\":> :: 237")
+                            row[actual_key] = sanitize_csv_field(str(value))
                     found = True
                     break
                     
             if not found:
                 return json_dumps({"status": "error", "message": f"Сотрудник с Login '{employee_login}' не найден"}, ensure_ascii=False)
                 
-            CSVManager.write_csv(EMPLOYEES_TB, data)
+            CSVManager.trunc_write_csv(EMPLOYEES_TB, data)
             return json_dumps({"status": "success", "message": f"Данные сотрудника '{employee_login}' обновлены"}, ensure_ascii=False)
         except JSONDecodeError:
             return "Ошибка: new_data_json не является валидным JSON."
@@ -247,7 +251,7 @@ class DB_Agent:
 
     @staticmethod
     @tool
-    def _delete_from_employees(employee_login: str) -> str:
+    def delete_from_employees(employee_login: str) -> str:
         """
         Удаляет сотрудника из CSV базы по ID.
         
@@ -271,7 +275,7 @@ class DB_Agent:
     
     @staticmethod
     @tool
-    def _select_from_clients(filter_by: Optional[str] = None, limit:Optional[int]=-1) -> str:
+    def select_from_clients(filter_by: Optional[str] = None, limit:Optional[int]=-1) -> str:
         """
         Читает данные о клиентах из CSV базы.
         
@@ -298,7 +302,7 @@ class DB_Agent:
 
     @staticmethod
     @tool
-    def _insert_into_clients(
+    def insert_into_clients(
         company_name:str,
         contact_person:str,
         email:str,
@@ -343,7 +347,7 @@ class DB_Agent:
 
     @staticmethod
     @tool
-    def _update_clients(client_id: int, new_data_json: str) -> str:
+    def update_clients(client_id: int, new_data_json: str) -> str:
         """
         Обновляет данные клиента.
         
@@ -354,29 +358,41 @@ class DB_Agent:
         try:
             updates = json_loads(new_data_json)
             data = CSVManager.read_csv(CLIENTS_TB)
-            
+            print(f"updates = {updates}")
+
+            actual_headers = get_csv_fields(CLIENTS_TB)
+        
+            # Создаем маппинг: lowercase → actual_case
+            header_mapping = {h.lower(): h for h in actual_headers}
+
             found = False
             for row in data:
-                if int(row.get('ID', 0)) == client_id:
+                if int(row["ID"]) == client_id:
                     for key, value in updates.items():
-                        if key in get_csv_fields(CLIENTS_TB) and key != 'ID':
-                            row[key] = sanitize_csv_field(str(value))
+                        # Приводим ключ к lowercase и ищем в маппинге
+                        actual_key = header_mapping.get(key.lower())
+                        if actual_key and actual_key != 'ID':
+                            print("\"Hi!\" from <if key in get_csv_fields(CLIENTS_TB) and key != \"ID\":> :: 375")
+                            row[actual_key] = sanitize_csv_field(str(value))
                     found = True
+                    print(f"row = {row}")
                     break
                     
             if not found:
                 return json_dumps({"status": "error", "message": f"Клиент {client_id} не найден"}, ensure_ascii=False)
                 
-            CSVManager.write_csv(CLIENTS_TB, data)
+            CSVManager.trunc_write_csv(CLIENTS_TB, data)
             return json_dumps({"status": "success", "message": f"Клиент {client_id} обновлен"}, ensure_ascii=False)
         except JSONDecodeError:
+            print("Ошибка: new_data_json не является валидным JSON.")
             return "Ошибка: new_data_json не является валидным JSON."
         except Exception as e:
+            print(f"Ошибка обновления: {str(e)}")
             return f"Ошибка обновления: {str(e)}"
 
     @staticmethod
     @tool
-    def _delete_from_clients(client_id: int) -> str:
+    def delete_from_clients(client_id: int) -> str:
         """
         Удаляет клиента из CSV базы по ID.
         
