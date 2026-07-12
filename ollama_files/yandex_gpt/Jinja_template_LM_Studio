@@ -1,0 +1,42 @@
+{# Выводим системное сообщение один раз #}
+{% if messages[0]['role'] == 'system' %}
+{{ messages[0]['content'] }}
+{% endif %}
+
+{# Перебираем историю сообщений #}
+{% for message in messages %}
+    {% if loop.first and message['role'] == 'system' %}
+        {# Системное сообщение уже выведено выше, пропускаем #}
+    
+    {% elif message['role'] == 'user' %}
+<|user|>
+{{ message['content'] }}
+<|end|>
+
+    {% elif message['role'] == 'assistant' %}
+        {# Проверяем, сформировал ли бэкенд tool_calls корректно #}
+        {% if message['tool_calls'] is defined and message['tool_calls'] | length > 0 %}
+<|tool_calls>
+{{ message['tool_calls'] | tojson(indent=2) }}
+</|tool_calls>
+<|end|>
+        
+        {# Если tool_calls пуст, но контент похож на JSON-инструмент, фиксируем это #}
+        {% elif message['content'] is string and message['content'] is not none and message['content'].strip().startswith('{') %}
+<|tool_calls>
+{{ message['content'] | from_json | tojson(indent=2) }}
+</|tool_calls>
+<|end|>
+
+        {# Обычный текстовый ответ #}
+        {% else %}
+{{ message['content'] }}
+<|end|>
+        {% endif %}
+
+    {% elif message['role'] == 'tool' %}
+<|tool>
+{{ message['content'] }}
+<|end|>
+    {% endif %}
+{% endfor %}
