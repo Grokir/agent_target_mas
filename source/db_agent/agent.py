@@ -133,8 +133,6 @@ class DB_Agent:
                         result = await tool.ainvoke(tool_call['args'])
                         # Возвращаем результат
                         return result
-        
-        # return response.content if hasattr(response, 'content') else str(response)
         return response
         
     #================================
@@ -144,15 +142,9 @@ class DB_Agent:
     @tool
     def select_from_employees(filter_by: Optional[str], limit:Optional[int]=-1) -> str:
         """
-        Читает данные о сотрудниках из CSV базы.
-        Используйте для поиска сотрудников.
-        
-        Args:
-            filter_by:  Необязательный фильтр в формате 'ключ=значение'. 
-                        Например: 'department=IT' или 'name=Иван'. 
-                        Если не указано, вернет всех сотрудников.
-            limit:      Необязательное ограчение длины полученных из БД данных.
-                        При limit < 0 выводится вся таблица.
+        - Вывести данные из таблицы сотрудников
+        - filter_by: фильтр в формате 'ключ=значение' (например, 'department=IT')
+        - limit: ограничение количества записей (-1 для всех)
         """
         try:
             data = CSVManager.read_csv(EMPLOYEES_TB)
@@ -182,17 +174,15 @@ class DB_Agent:
         position:str,
         wage:int) -> str:
         """
-        Добавляет нового сотрудника в CSV базу. Автоматически генерирует ID.
-        
-        Args:
-            login: логин сотрудника,
-            password: пароль сотрудника,
-            name: имя сотрудника,
-            surname: фамилия сотрудника,
-            birthday_date: дата рождения сотрудника в формате YYYY-MM-DD,
-            department: отдел,
-            position: должность,
-            wage: размер заработной платы (в рублях).
+        - Добавить нового сотрудника
+        - login: логин сотрудника
+        - password: пароль сотрудника
+        - name: имя сотрудника
+        - surname: фамилия сотрудника
+        - birthday_date: дата рождения в формате YYYY-MM-DD
+        - department: отдел
+        - position: должность
+        - wage: заработная плата в рублях
         """
         try:
             new_row = {
@@ -215,12 +205,9 @@ class DB_Agent:
     @tool
     def update_employees(employee_login: str, new_data_json: str) -> str:
         """
-        Обновляет данные существующего сотрудника.
-        
-        Args:
-            employee_login: логин сотрудника для обновления.
-            new_data_json: Новые данные в формате JSON строки. 
-                           Пример: '{"position": "Senior Developer", "department": "AI"}'
+        - Обновить данные существующего сотрудника
+        - employee_login: логин сотрудника для обновления
+        - new_data_json: JSON строка с новыми данными (например, '{"position": "Senior Developer"}')
         """
         try:
             updates = json_loads(new_data_json)
@@ -253,10 +240,8 @@ class DB_Agent:
     @tool
     def delete_from_employees(employee_login: str) -> str:
         """
-        Удаляет сотрудника из CSV базы по ID.
-        
-        Args:
-            employee_login: Login сотрудника для удаления.
+        - Удалить сотрудника из базы
+        - employee_login: логин сотрудника для удаления
         """
         try:
             data = CSVManager.read_csv(EMPLOYEES_TB)
@@ -277,12 +262,9 @@ class DB_Agent:
     @tool
     def select_from_clients(filter_by: Optional[str] = None, limit:Optional[int]=-1) -> str:
         """
-        Читает данные о клиентах из CSV базы.
-        
-        Args:
-            filter_by: Необязательный фильтр 'ключ=значение' (например, 'email=test@mail.com').
-            limit:      Необязательное ограчение длины полученных из БД данных.
-            При limit < 0 выводится вся таблица.
+        - Выбрать данные из таблицы клиентов
+        - filter_by: фильтр в формате 'ключ=значение' (например, 'email=test@mail.com')
+        - limit: ограничение количества записей (-1 для всех)
         """
         try:
             data = CSVManager.read_csv(CLIENTS_TB)
@@ -312,17 +294,15 @@ class DB_Agent:
         status:str,
         account_manager:str) -> str:
         """
-        Добавляет нового клиента в CSV базу.
-        
-        Args:
-            company_name: Название организации (клиента),
-            contact_person: Лицо, представляющее клиента,
-            email: Email контактного лица,
-            phone: Телефон контактного лица,
-            industry: Направление деятельности клиента,
-            contract_start: Дата заключения контракта,
-            status: Статус контракта,
-            account_manager: С каким менеджером работает клиент.
+        - Добавить нового клиента
+        - company_name: название организации
+        - contact_person: контактное лицо
+        - email: email контактного лица
+        - phone: телефон контактного лица
+        - industry: направление деятельности
+        - contract_start: дата заключения контракта
+        - status: статус контракта
+        - account_manager: менеджер клиента
         """
         try:
             data = CSVManager.read_csv(CLIENTS_TB)
@@ -349,11 +329,9 @@ class DB_Agent:
     @tool
     def update_clients(client_id: int, new_data_json: str) -> str:
         """
-        Обновляет данные клиента.
-        
-        Args:
-            client_id: ID клиента.
-            new_data_json: JSON строка с новыми данными (например, '{"phone": "+79999999999"}').
+        - Обновить данные клиента
+        - client_id: ID клиента для обновления
+        - new_data_json: JSON строка с новыми данными
         """
         try:
             updates = json_loads(new_data_json)
@@ -394,10 +372,8 @@ class DB_Agent:
     @tool
     def delete_from_clients(client_id: int) -> str:
         """
-        Удаляет клиента из CSV базы по ID.
-        
-        Args:
-            client_id: ID клиента.
+        - Удалить клиента из базы
+        - client_id: ID клиента для удаления
         """
         try:
             data = CSVManager.read_csv(CLIENTS_TB)

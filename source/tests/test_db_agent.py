@@ -9,7 +9,7 @@ async def test_base_work() -> tuple[str, bool, str]:
     test_res_comment = ""
 
     queue_prompts_employee = [
-        "Выведи первые 4 записи сотрудников",
+        "Выведи первые 4 строки из таблицы сотрудников",
         """Нужно добавить нового сотрудника:
         Login: roma_228,
         Пароль: 822_omar,
@@ -44,10 +44,10 @@ async def test_base_work() -> tuple[str, bool, str]:
         test_res_comment += ' ' + str(e)
 
     try:
-        # print("\t\t[employee]")
+        print("\n\n[employee]")
         for p in queue_prompts_employee:
-            await agent.send_message(p)
-            # print((await agent.send_message(p))["messages"][-1].content)
+            # await agent.send_message(p)
+            print((await agent.send_message(p))["messages"][-1].content)
             # print((await agent.send_message(p)))
             # print()
 
@@ -57,10 +57,10 @@ async def test_base_work() -> tuple[str, bool, str]:
 
     
     try:
-        # print("\t\t[clients]")
+        print("\n\n[clients]")
         for p in queue_prompts_clients:
-            await agent.send_message(p)
-            # print((await agent.send_message(p))["messages"][-1].content)
+            # await agent.send_message(p)
+            print((await agent.send_message(p))["messages"][-1].content)
             # print((await agent.send_message(p)))
             # print()
     except Exception as e:
