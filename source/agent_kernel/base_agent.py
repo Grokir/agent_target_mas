@@ -10,7 +10,8 @@ from langchain.agents import create_agent
 from langgraph.checkpoint.memory import MemorySaver
 
 # OLLAMA_URL = "http://localhost:11434/api/chat"
-OLLAMA_URL = "http://localhost:11434/v1"
+# OLLAMA_URL = "http://localhost:11434/v1"
+OLLAMA_URL = "http://localhost:1234/v1" # временно используется LM Studio для отладки
 
 CONFIG = {"configurable": {"thread_id": "session-1"}}
 AGENT_EXEC = None
