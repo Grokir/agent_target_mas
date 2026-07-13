@@ -8,6 +8,7 @@ from csv import DictReader, DictWriter
 from os.path import abspath
 from typing import Optional
 from json import dumps as json_dumps, loads as json_loads, JSONDecodeError
+import re
 
 # Внутренний класс для работы с CSV, чтобы не дублировать код в инструментах
 def get_abs_path(table_name:str) -> str:
@@ -32,14 +33,14 @@ def parse_tool_calls_from_content(content: str) -> list:
         # Ищем JSON в content
         json_match = re.search(r'\{.*\}', content, re.DOTALL)
         if json_match:
-            data = json.loads(json_match.group())
+            data = json_loads(json_match.group())
             if 'tool' in data and 'arguments' in data:
                 return [{
                     'name': data['tool'],
                     'args': data['arguments'],
                     'id': f"call_{data['tool']}"
                 }]
-    except (json.JSONDecodeError, KeyError):
+    except (JSONDecodeError, KeyError):
         pass
     return []
 

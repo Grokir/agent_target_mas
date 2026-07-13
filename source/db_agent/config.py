@@ -1,7 +1,9 @@
 # MODEL_NAME = "hf.co/yandex/YandexGPT-5-Lite-8B-instruct-GGUF:Q4_K_M"
 # MODEL_NAME = "hf.co/ai-sage/GigaChat3.1-10B-A1.8B-GGUF:Q4_K_M"
 # MODEL_NAME = "gigachat3.1-custom_templ"
-MODEL_NAME = "qwen2.5:3b-instruct"
+# MODEL_NAME = "qwen2.5:3b-instruct"
+
+MODEL_NAME = "yandexgpt-5-lite-8b-instruct"
 
 PATH_DB_DIR = "./db_files"
 EMPLOYEES_TB = "employees.csv"
@@ -16,7 +18,7 @@ SYSPROMPT = """Ты AI-агент, который взаимодействует
 ДОСТУПНЫЕ ИНСТРУМЕНТЫ:
 
 1. select_from_employees(filter_by: str, limit: int)
-   - Выбрать данные из таблицы сотрудников
+   - Вывести данные из таблицы сотрудников
    - filter_by: фильтр в формате 'ключ=значение' (например, 'department=IT')
    - limit: ограничение количества записей (-1 для всех)
 
@@ -71,23 +73,13 @@ SYSPROMPT = """Ты AI-агент, который взаимодействует
 ПРИМЕРЫ:
 - "Покажи всех сотрудников из IT отдела" → {"tool": "select_from_employees", "arguments": {"filter_by": "department=IT", "limit": -1}}
 - "Выведи 5 записей из таблицы employees" → {"tool": "select_from_employees", "arguments": {"limit": 5}}
-- "Добавь сотрудника Иван Иванов с логином ivanov" → {"tool": "insert_into_employees", "arguments": {"login": "ivanov", "password": "pass123", "name": "Иван", "surname": "Иванов", "birthday_date": "1990-01-01", "department": "IT", "posistion": "Developer", "wage": 100000}}
+- "Добавь сотрудника Иван Иванов с логином ivanov" → {"tool": "insert_into_employees", "arguments": {"login": "ivanov", "password": "pass123", "name": "Иван", "surname": "Иванов", "birthday_date": "1990-01-01", "department": "IT", "position": "Developer", "wage": 100000}}
 - "Удали сотрудника с логином ivanov" → {"tool": "delete_from_employees", "arguments": {"employee_login": "ivanov"}}
 
 ПРАВИЛА НОРМАЛИЗАЦИИ ДАННЫХ:
 При обновлении или добавлении записей в БД, ты ДОЛЖЕН:
 1. Приводить имена собственные к именительному падежу (например, "Наталью Проскурину" → "Наталья Проскурина")
 2. Исправлять очевидные опечатки в именах
-3. Форматировать телефонные номера в единый формат (например, +7XXX XXX XX XX)
-4. Приводить даты к формату YYYY-MM-DD
+3. Приводить даты к формату YYYY-MM-DD
 
 Если инструмент не нужен, отвечай обычным текстом."""
-
-
-
-# ПРАВИЛА НОРМАЛИЗАЦИИ ДАННЫХ:
-# При обновлении или добавлении записей в БД, ты ДОЛЖЕН:
-# 1. Приводить имена собственные к именительному падежу (например, "Наталью Проскурину" → "Наталья Проскурина")
-# 2. Исправлять очевидные опечатки в именах
-# 3. Форматировать телефонные номера в единый формат (например, +7XXX XXX XX XX)
-# 4. Приводить даты к формату YYYY-MM-DD
