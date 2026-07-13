@@ -1,39 +1,45 @@
-{# Выводим системное сообщение один раз #}
-{% if messages[0]['role'] == 'system' %}
+{# === Системное сообщение (выводим один раз до цикла) === #}
+{% if messages | length > 0 and messages[0]['role'] == 'system' %}
 {{ messages[0]['content'] }}
 {% endif %}
 
-{# Перебираем историю сообщений #}
+{# === Перебор истории сообщений === #}
 {% for message in messages %}
+    {# Пропускаем системное сообщение внутри цикла во избежание дублирования #}
     {% if loop.first and message['role'] == 'system' %}
-        {# Системное сообщение уже выведено выше, пропускаем #}
-    
-    {% elif message['role'] == 'user' %}
+        {% continue %}
+    {% endif %}
+
+    {### РОЛЬ: ПОЛЬЗОВАТЕЛЬ ###}
+    {% if message['role'] == 'user' %}
 <|user|>
 {{ message['content'] }}
 <|end|>
 
+    {### РОЛЬ: АССИСТЕНТ ###}
     {% elif message['role'] == 'assistant' %}
-        {# Проверяем, сформировал ли бэкенд tool_calls корректно #}
+        {# Блокируем вывод тега, если контент пуст или содержит только пробелы #}
+        {% set content = message['content'] | default('') | trim %}
+        
         {% if message['tool_calls'] is defined and message['tool_calls'] | length > 0 %}
 <|tool_calls>
 {{ message['tool_calls'] | tojson(indent=2) }}
 </|tool_calls>
-<|end|>
-        
-        {# Если tool_calls пуст, но контент похож на JSON-инструмент, фиксируем это #}
-        {% elif message['content'] is string and message['content'] is not none and message['content'].strip().startswith('{') %}
-<|tool_calls>
-{{ message['content'] | from_json | tojson(indent=2) }}
-</|tool_calls>
+
+        {# Если это обычный текст — очищаем его от любых служебных меток модели #}
+        {% elif content != '' %}
+<|assistant|>
+{{ content 
+   | replace('<|assistant|>', '') 
+   | replace('<|end|>', '') 
+   | replace('<|user|>', '') 
+   | replace('<|tool|>', '') 
+   | replace('{ "tool"', '\n{ "tool"') }}
 <|end|>
 
-        {# Обычный текстовый ответ #}
-        {% else %}
-{{ message['content'] }}
-<|end|>
         {% endif %}
 
+    {### РОЛЬ: ИНСТРУМЕНТ (ответ сервера) ###}
     {% elif message['role'] == 'tool' %}
 <|tool>
 {{ message['content'] }}
