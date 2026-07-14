@@ -1,11 +1,9 @@
 # MODEL_NAME = "hf.co/yandex/YandexGPT-5-Lite-8B-instruct-GGUF:Q4_K_M"
 # MODEL_NAME = "hf.co/ai-sage/GigaChat3.1-10B-A1.8B-GGUF:Q4_K_M"
 # MODEL_NAME = "gigachat3.1-custom_templ"
-MODEL_NAME = "qwen2.5:3b-instruct"
-
-PATH_DB_DIR = "./db_files"
-EMPLOYEES_TB = "employees.csv"
-CLIENTS_TB = "clients.csv"
+# MODEL_NAME = "qwen2.5:3b-instruct"
+# MODEL_NAME = "qwen2.5-7b-instruct-uncensored"
+MODEL_NAME = "deepseek-coder-v2-lite-instruct"
 
 SYSPROMPT = """Ты AI-агент, который запускает и генерируе python код.
 У тебя есть доступ к инструментам для работы. 
@@ -32,12 +30,15 @@ SYSPROMPT = """Ты AI-агент, который запускает и гене
 3. generate_python_code(tech_task:str)
       Генерирует python код на основе технического задания.
 
-ФОРМАТ ВЫЗОВА ИНСТРУМЕНТА:
-{"tool": "имя_инструмента", "arguments": {"параметр1": "значение1", "параметр2": "значение2"}}
-
-ПРИМЕРЫ:
-- "Запусти этот код изолированно: print('Hello world!')" → {"tool": "run_code_in_docker", "arguments": {"code_string": "print('Hello world!')"}}
-- "Запусти этот код локально: print('Hello world!')" → {"tool": "run_python_code", "arguments": {"code_string": "print('Hello world!')"}}
-- "Напиши код, который бы на вход принимал имя пользователя и выводил бы 'Привет, Пользователь!'" → {"tool": "generate_python_code", "arguments": {"tech_task": "Напиши код, который бы на вход принимал имя пользователя и выводил бы 'Привет, Пользователь!'"}}
+Обязательно выводи результат выполнения инструментов.
 
 Если инструмент не нужен, отвечай обычным текстом."""
+
+
+# ФОРМАТ ВЫЗОВА ИНСТРУМЕНТА:
+# {"tool": "имя_инструмента", "arguments": {"параметр1": "значение1", "параметр2": "значение2"}}
+
+# ПРИМЕРЫ:
+# - "Запусти этот код изолированно: print('Hello world!')" → {"tool": "run_code_in_docker", "arguments": {"code_string": "print('Hello world!')"}}
+# - "Запусти этот код локально: print('Hello world!')" → {"tool": "run_python_code", "arguments": {"code_string": "print('Hello world!')"}}
+# - "Напиши код, который бы на вход принимал имя пользователя и выводил бы 'Привет, Пользователь!'" → {"tool": "generate_python_code", "arguments": {"tech_task": "Напиши код, который бы на вход принимал имя пользователя и выводил бы 'Привет, Пользователь!'"}}
