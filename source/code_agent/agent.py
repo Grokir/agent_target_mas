@@ -2,11 +2,10 @@ from langchain_core.tools       import tool, StructuredTool
 from langchain_openai           import ChatOpenAI
 
 from agent_kernel.base_agent    import kernel_init, send_prompt, memory_clear
-from db_agent.config            import MODEL_NAME, SYSPROMPT
+from code_agent.config          import MODEL_NAME, SYSPROMPT
 
 from typing                     import Optional
 from json                       import dumps as json_dumps, loads as json_loads, JSONDecodeError
-
 from docker.errors              import ContainerError, ImageNotFound
 import docker
 import re
@@ -32,34 +31,20 @@ def parse_tool_calls_from_content(content: str) -> list:
     return []
 
 
-def init_generation_llm(model_name:str):
-    """Инициализация LLM для генерации новых атак (можно переиспользовать ту же модель)."""
-    global LLM_FOR_GENERATION
-    if LLM_FOR_GENERATION is None:
-        LLM_FOR_GENERATION = ChatOpenAI(
-            # model="mistral-nemo-instruct-2407",  # или ваша модель
-            # base_url="http://localhost:1234/v1",
-
-            model=model_name,  # или ваша модель
-            base_url=base_url,
-            api_key="not-needed",
-            temperature=0.9
-        )
-    return LLM_FOR_GENERATION
-
-
 class Code_Agent:
     # @staticmethod
     def __init__(self):
         self.__tools = [
-
+            self.run_python_code,
+            self.run_code_in_docker,
+            self.generate_python_code,
         ]
 
         self.__core = kernel_init(
             model_name=MODEL_NAME, 
             tools=self.__tools, 
             sysprompt=SYSPROMPT,
-            temp=0.0
+            temp=0.7
         )
 
     # async def send_message(self, message:str):
