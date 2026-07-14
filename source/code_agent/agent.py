@@ -181,7 +181,7 @@ class Code_Agent:
 
     @staticmethod
     @tool
-    def generate_python_code(tech_task:SyntaxError) -> str:
+    def generate_python_code(tech_task:str) -> str:
         """
         Генерирует python код на основе технического задания.
         """
