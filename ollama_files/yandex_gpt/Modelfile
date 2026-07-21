@@ -1,0 +1,40 @@
+# 1. Указываем базовую модель, которую мы настраиваем
+FROM hf.co/yandex/YandexGPT-5-Lite-8B-instruct-GGUF:Q4_K_M
+
+# 2. Задаем шаблон запроса (параметры .System, .Prompt, .Response подставляются Ollama автоматически)
+TEMPLATE """{{ if .System }}<|system|>
+{{ .System }}<|end|>
+{{ end }}{{ if .Prompt }}<|user|>
+{{ .Prompt }}<|end|>
+{{ end }}<|assistant|>
+{{ .Response }}<|end|>"""
+
+# 3. Опционально: вшиваем системный промпт по умолчанию
+SYSTEM """Ты — полезный ИИ-ассистент. Если тебе доступны инструменты, ты должен использовать их, возвращая результат строго в формате JSON."""
+
+# 4. Опционально: можно настроить параметры контекста или температуры
+PARAMETER temperature 0.3
+PARAMETER num_ctx 4096
+
+; Новый шаблон
+; {{ if .System }}<|start_header_id|>system<|end_header_id|>
+
+; {{ .System }}<|eot_id|>
+; {{ end }}
+; {{- if .Tools -}}
+; <|start_header_id|>tool_calls<|end_header_id|>
+
+; <tools>
+; {{- range $tool := .Tools }}
+; {
+;   "type": "function",
+;   "function": {
+;     "name": "{{ $tool.Function.Name }}",
+;     "description": "{{ $tool.Function.Description }}",
+;     "parameters": {{ $tool.Function.Parameters }}
+;   }
+; }
+; {{- end }}
+; </tools>
+; <|eot_id|>
+; {{- end -}}
