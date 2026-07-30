@@ -10,22 +10,6 @@ from typing import Optional
 from json import dumps as json_dumps, loads as json_loads, JSONDecodeError
 import re
 
-def _parse_tool_calls_from_content(content: str) -> list:
-    """Извлекает tool calls из content модели"""
-    try:
-        # Ищем JSON в content
-        json_match = re.search(r'\{.*\}', content, re.DOTALL)
-        if json_match:
-            data = json_loads(json_match.group())
-            if 'tool' in data and 'arguments' in data:
-                return [{
-                    'name': data['tool'],
-                    'args': data['arguments'],
-                    'id': f"call_{data['tool']}"
-                }]
-    except (JSONDecodeError, KeyError):
-        pass
-    return []
 
 class Coord_Agent:
     # @staticmethod

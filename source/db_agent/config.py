@@ -1,11 +1,17 @@
+from pathlib import Path
+
 # MODEL_NAME = "hf.co/yandex/YandexGPT-5-Lite-8B-instruct-GGUF:Q4_K_M"
 # MODEL_NAME = "hf.co/ai-sage/GigaChat3.1-10B-A1.8B-GGUF:Q4_K_M"
 # MODEL_NAME = "gigachat3.1-custom_templ"
 # MODEL_NAME = "qwen2.5:3b-instruct"
 
-MODEL_NAME = "yandexgpt-5-lite-8b-instruct"
+MODEL_NAME = "qwen2.5-7b-instruct-uncensored"
 
-PATH_DB_DIR = "./db_files"
+# MODEL_NAME = "yandexgpt-5-lite-8b-instruct"
+
+# Абсолютный путь, а не CWD-относительный: "./db_files" ломался, если процесс
+# запущен не из source/ (например, pytest из корня репозитория).
+PATH_DB_DIR = str(Path(__file__).resolve().parent.parent / "db_files")
 EMPLOYEES_TB = "employees.csv"
 CLIENTS_TB = "clients.csv"
 

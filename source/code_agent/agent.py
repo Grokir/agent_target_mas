@@ -1,7 +1,7 @@
 from langchain_core.tools       import tool, StructuredTool
 from langchain_openai           import ChatOpenAI
 
-from agent_kernel.base_agent    import kernel_init, send_prompt, memory_clear
+from agent_kernel.base_agent    import kernel_init, send_prompt, memory_clear, OLLAMA_URL
 from code_agent.config          import MODEL_NAME, SYSPROMPT
 
 from typing                     import Optional
@@ -171,11 +171,14 @@ class Code_Agent:
         Генерирует python код на основе технического задания.
         """
 
-        llm = kernel_init(
-            model_name=MODEL_NAME, 
-            tools=[], 
-            sysprompt=SYSPROMPT,
-            temp=0.9
+        # Разовый запрос "текст -> код" без памяти и без тулов, поэтому
+        # используем чат-модель напрямую, а не kernel_init/create_agent
+        # (тому нужен thread_id чекпоинтера и словарь состояния на вход).
+        llm = ChatOpenAI(
+            model=MODEL_NAME,
+            base_url=OLLAMA_URL,
+            api_key="not-needed",
+            temperature=0.9,
         )
         system = "Ты — инструмент для генерации python кода на основе полученного технического задания."
         user = f"Техническое задание: {tech_task}."
