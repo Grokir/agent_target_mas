@@ -1,7 +1,7 @@
 import pytest
 from fastapi.testclient import TestClient
 
-from agent_repeater_server import app
+from source.web.agent_repeater_server import app
 from coord_agent.config import CODE_AGENT_ID, DB_AGENT_ID
 
 pytestmark = pytest.mark.llm
