@@ -1,6 +1,6 @@
 from langchain_core.tools import tool, StructuredTool
 
-from agent_kernel.base_agent import kernel_init, send_prompt, memory_clear
+from agent_kernel.base_agent import kernel_init, send_prompt, memory_clear, DEFAULT_THREAD_ID
 from db_agent.config import MODEL_NAME, SYSPROMPT
 from db_agent.config import PATH_DB_DIR, EMPLOYEES_TB, CLIENTS_TB
 
@@ -117,9 +117,9 @@ class DB_Agent:
     #     """Возвращает текстовый ответ от ядра"""
     #     return await send_prompt(self.__core, message)
         
-    async def send_message(self, message: str):
-        response = await send_prompt(self.__core, message)
-        
+    async def send_message(self, message: str, thread_id: str = DEFAULT_THREAD_ID):
+        response = await send_prompt(self.__core, message, thread_id=thread_id)
+
         # Проверяем, есть ли tool calls в content
         if hasattr(response, 'content') and response.content:
             tool_calls = parse_tool_calls_from_content(response.content)
