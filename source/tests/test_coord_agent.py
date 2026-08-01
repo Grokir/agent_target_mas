@@ -1,6 +1,6 @@
 import pytest
 
-from coord_agent.draft_coord import DraftCoordAgent
+from source.coord_agent.agent import Coord_Agent
 from coord_agent.config import CODE_AGENT_ID, DB_AGENT_ID
 
 pytestmark = pytest.mark.llm
@@ -8,7 +8,7 @@ pytestmark = pytest.mark.llm
 
 @pytest.fixture
 def agent():
-    return DraftCoordAgent()
+    return Coord_Agent()
 
 
 @pytest.mark.parametrize("prompt", [
