@@ -13,7 +13,7 @@ from langgraph.checkpoint.memory import MemorySaver
 # OLLAMA_URL = "http://localhost:11434/v1"
 OLLAMA_URL = "http://localhost:1234/v1" # временно используется LM Studio для отладки
 
-CONFIG = {"configurable": {"thread_id": "session-1"}}
+DEFAULT_THREAD_ID = "session-1"
 AGENT_EXEC = None
 
 def kernel_init(model_name:str, tools:list, sysprompt:str, temp:float=0.7):
@@ -34,13 +34,11 @@ def kernel_init(model_name:str, tools:list, sysprompt:str, temp:float=0.7):
         checkpointer=MemorySaver(),
     )
 
-async def send_prompt(agent, input_str: str, role:str="user"):
+async def send_prompt(agent, input_str: str, role:str="user", thread_id:str=DEFAULT_THREAD_ID):
     return await agent.ainvoke(
         {"role": role, "messages": [HumanMessage(content=input_str)]},
-        config=CONFIG
+        config={"configurable": {"thread_id": thread_id}}
     )
 
-def memory_clear(agent):
-    global CONFIG
-    agent.update_state(CONFIG, {"messages": []}) 
-    
+def memory_clear(agent, thread_id:str=DEFAULT_THREAD_ID):
+    agent.update_state({"configurable": {"thread_id": thread_id}}, {"messages": []})
