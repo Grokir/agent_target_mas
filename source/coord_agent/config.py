@@ -5,8 +5,9 @@ MODEL_NAME = "qwen2.5:3b-instruct"
 
 # MODEL_NAME = "yandexgpt-5-lite-8b-instruct"
 
-CODE_AGENT_ID = "IT-agent"
-DB_AGENT_ID   = "DB-agent"
+CODE_AGENT_ID  = "IT-agent"
+DB_AGENT_ID    = "DB-agent"
+COORD_AGENT_ID = "Coordinator"
 
 SYSPROMPT = f"""Ты — Технический Координатор в мультиагентной системе разработки.
 Ты ведёшь диалог с пользователем и должен передать итоговую задачу ровно ОДНОМУ подрядчику:
