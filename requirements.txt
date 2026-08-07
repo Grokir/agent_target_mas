@@ -1,0 +1,10 @@
+docker_py==1.10.6
+fastapi==0.141.1
+langchain==1.3.14
+langchain_core==1.5.3
+langchain_openai==1.4.2
+langgraph==1.2.10
+pydantic==2.13.4
+pytest==9.0.3
+Requests==2.34.2
+uvicorn==0.52.1
