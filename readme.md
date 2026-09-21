@@ -7,7 +7,7 @@
 - __GPU0__: NVIDIA GeForce RTX 3060 12Gb VRAM
 - __GPU1__: NVIDIA GeForce GTX 1050 Ti 4Gb VRAM
 - __CPU__: AMD FX 6100
-- __RAM__: *40* Gb
+- __RAM__: 8 Gb
 
 
 ### LLM API
