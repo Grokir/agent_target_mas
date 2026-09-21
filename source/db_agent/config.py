@@ -2,12 +2,20 @@ from pathlib import Path
 
 # MODEL_NAME = "hf.co/yandex/YandexGPT-5-Lite-8B-instruct-GGUF:Q4_K_M"
 # MODEL_NAME = "hf.co/ai-sage/GigaChat3.1-10B-A1.8B-GGUF:Q4_K_M"
-MODEL_NAME = "gigachat3.1-custom_templ"
+# MODEL_NAME = "gigachat3.1-custom_templ"
+## MODEL_NAME = "gigachat3.1-10b-a1.8b"
 # MODEL_NAME = "qwen2.5:3b-instruct"
 
 # MODEL_NAME = "qwen2.5-7b-instruct-uncensored"
 
-# MODEL_NAME = "yandexgpt-5-lite-8b-instruct"
+MODEL_NAME = "yandexgpt-5-lite-8b-instruct"
+
+# MODEL_NAME = "YandexGPT-5-Lite-8B-instruct-Q4_K_M.gguf"
+# LLAMA_URL = "http://localhost:1234/v1" # временно используется LM Studio для отладки
+
+LLAMA_URL = "http://192.168.0.105:5002"
+# LLAMA_URL = "http://192.168.0.105:5002/v1/chat/completions"
+# LLAMA_URL = "http://localhost:8000/v1" # ЧЕРЕЗ КОНВЕРТЕР временно используется LM Studio для отладки 
 
 # Абсолютный путь, а не CWD-относительный: "./db_files" ломался, если процесс
 # запущен не из source/ (например, pytest из корня репозитория).

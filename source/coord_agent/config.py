@@ -1,9 +1,13 @@
 # MODEL_NAME = "hf.co/yandex/YandexGPT-5-Lite-8B-instruct-GGUF:Q4_K_M"
 # MODEL_NAME = "hf.co/ai-sage/GigaChat3.1-10B-A1.8B-GGUF:Q4_K_M"
-MODEL_NAME = "gigachat3.1-custom_templ"
+# MODEL_NAME = "gigachat3.1-custom_templ"
+## MODEL_NAME = "gigachat3.1-10b-a1.8b"
 # MODEL_NAME = "qwen2.5:3b-instruct"
-
 # MODEL_NAME = "yandexgpt-5-lite-8b-instruct"
+
+MODEL_NAME = "GigaChat3.1-10B-A1.8B-q4_K_M.gguf"
+# LLAMA_URL = "http://192.168.0.105:5001/v1/chat/completions"
+LLAMA_URL = "http://192.168.0.105:5001"
 
 CODE_AGENT_ID  = "IT-agent"
 DB_AGENT_ID    = "DB-agent"

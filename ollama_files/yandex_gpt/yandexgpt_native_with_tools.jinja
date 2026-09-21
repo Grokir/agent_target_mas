@@ -1,0 +1,55 @@
+<s>{%- set names = {'assistant': ' Ассистент:', 'user': ' Пользователь:'} %}
+{%- macro __render_user_message(message) %}
+{{ names.user }} {{ message.content + '\n\n' }}
+{%- endmacro %}
+{%- macro __render_assistant_message(message) %}
+    {{- names.assistant }}
+    {%- if message.tool_calls is defined and message.tool_calls %}
+        {{- ' ' }}
+        {%- for call in message.tool_calls %}
+{"tool": "{{ call.function.name }}", "arguments": {{ call.function.arguments | tojson }}}
+        {%- endfor %}
+        {{- '\n\n' }}
+    {%- else %}
+        {{- ' ' + message.content + '\n\n' }}
+    {%- endif %}
+{%- endmacro %}
+{%- macro __render_tool_message(message) %}
+{{ names.user }} {{ 'Результат выполнения инструмента: ' + message.content + '\n\n' }}
+{%- endmacro %}
+{%- if not add_generation_prompt is defined %}
+{%- set add_generation_prompt = false %}
+{%- endif %}
+{%- set system_message = messages[0] if messages[0]['role'] == 'system' else none %}
+{%- set loop_messages = messages[1:] if system_message else messages %}
+{%- if system_message or tools %}
+{%- if system_message %}
+{{ system_message.content }}
+{% endif -%}
+{%- if tools %}
+Тебе доступны инструменты для работы с данными. Используй их, когда это нужно для ответа на запрос пользователя. Чтобы вызвать инструмент, ответь СТРОГО одним JSON-объектом в формате:
+{"tool": "имя_инструмента", "arguments": {"параметр1": "значение1"}}
+Если инструмент не нужен, отвечай обычным текстом.
+
+Доступные инструменты:
+{%- for tool in tools %}
+- {{ tool.function.name }}: {{ tool.function.description }}
+  Параметры (JSON Schema): {{ tool.function.parameters | tojson }}
+{%- endfor %}
+{% endif -%}
+{{ '\n' }}
+{%- endif %}
+{%- for message in loop_messages %}
+    {%- if message['role'] == 'user' %}
+        {{- __render_user_message(message) }}
+    {%- endif %}
+    {%- if message.role == 'assistant' and not loop.last %}
+        {{- __render_assistant_message(message) }}
+    {%- endif %}
+    {%- if message.role == 'tool' %}
+        {{- __render_tool_message(message) }}
+    {%- endif %}
+    {%- if loop.last %}
+        {{- ' Ассистент:[SEP]' }}
+    {%- endif %}
+{%- endfor %}

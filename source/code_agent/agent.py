@@ -1,8 +1,8 @@
 from langchain_core.tools       import tool, StructuredTool
 from langchain_openai           import ChatOpenAI
 
-from agent_kernel.base_agent    import kernel_init, send_prompt, memory_clear, OLLAMA_URL, DEFAULT_THREAD_ID
-from code_agent.config          import MODEL_NAME, SYSPROMPT
+from agent_kernel.base_agent    import kernel_init, send_prompt, memory_clear, DEFAULT_THREAD_ID #, OLLAMA_URL
+from code_agent.config          import MODEL_NAME, SYSPROMPT, LLAMA_URL
 
 from typing                     import Optional
 from json                       import dumps as json_dumps, loads as json_loads, JSONDecodeError
@@ -41,6 +41,7 @@ class Code_Agent:
         ]
 
         self.__core = kernel_init(
+            url=LLAMA_URL,
             model_name=MODEL_NAME, 
             tools=self.__tools, 
             sysprompt=SYSPROMPT,
@@ -176,7 +177,8 @@ class Code_Agent:
         # (тому нужен thread_id чекпоинтера и словарь состояния на вход).
         llm = ChatOpenAI(
             model=MODEL_NAME,
-            base_url=OLLAMA_URL,
+            # base_url=OLLAMA_URL,
+            base_url=LLAMA_URL,
             api_key="not-needed",
             temperature=0.9,
         )

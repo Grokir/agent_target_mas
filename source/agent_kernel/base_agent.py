@@ -11,17 +11,18 @@ from langgraph.checkpoint.memory import MemorySaver
 
 # OLLAMA_URL = "http://localhost:11434/api/chat"
 # OLLAMA_URL = "http://localhost:11434/v1"
-OLLAMA_URL = "http://localhost:1234/v1" # временно используется LM Studio для отладки
+# OLLAMA_URL = "http://localhost:1234/v1" # временно используется LM Studio для отладки
 
 DEFAULT_THREAD_ID = "session-1"
 AGENT_EXEC = None
 
-def kernel_init(model_name:str, tools:list, sysprompt:str, temp:float=0.7):
-    global OLLAMA_URL
+def kernel_init(url:str, model_name:str, tools:list, sysprompt:str, temp:float=0.7):
+    # global OLLAMA_URL
 
     llm = ChatOpenAI(
         model=model_name,
-        base_url=OLLAMA_URL,
+        # base_url=OLLAMA_URL,
+        base_url=url,
         api_key="not-needed",
         # temperature=0.1,
         temperature=temp,
