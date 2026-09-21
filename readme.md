@@ -1,11 +1,18 @@
-### Конфигерация стенда
+### Конфигерация стенда 1
 - __GPU__: NVIDIA GeForce GTX 1650 4Gb VRAM
 - __CPU__: AMD Ryzen 5 4600H
 - __RAM__: 40 Gb
 
+### Конфигерация стенда 2
+- __GPU0__: NVIDIA GeForce RTX 3060 12Gb VRAM
+- __GPU1__: NVIDIA GeForce GTX 1050 Ti 4Gb VRAM
+- __CPU__: AMD FX 6100
+- __RAM__: *40* Gb
+
+
 ### LLM API
 - Локальная загрузка модели (Qwen, GigaChat, Mistral)
-- Для запуска используется Ollama
+- Для запуска используется llama.cpp
 
 ### Описание
 Это целевая мультагентная система (MAS) для проверки работоспособности агента-тестировщика.
