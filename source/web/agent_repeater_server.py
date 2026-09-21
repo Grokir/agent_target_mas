@@ -7,6 +7,12 @@ from fastapi.responses import FileResponse
 from pydantic import BaseModel
 import uvicorn
 
+import sys
+
+# Получаем путь к родительской директории и добавляем её в sys.path
+parent_dir = Path(__file__).resolve().parent.parent
+sys.path.append(str(parent_dir))
+
 from main import handle_chat_request
 
 

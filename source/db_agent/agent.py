@@ -1,7 +1,7 @@
 from langchain_core.tools import tool, StructuredTool
 
 from agent_kernel.base_agent import kernel_init, send_prompt, memory_clear, DEFAULT_THREAD_ID
-from db_agent.config import MODEL_NAME, SYSPROMPT
+from db_agent.config import LLAMA_URL, MODEL_NAME, SYSPROMPT
 from db_agent.config import PATH_DB_DIR, EMPLOYEES_TB, CLIENTS_TB
 
 from csv import DictReader, DictWriter
@@ -107,6 +107,7 @@ class DB_Agent:
         ]
 
         self.__core = kernel_init(
+            url=LLAMA_URL,
             model_name=MODEL_NAME, 
             tools=self.__tools, 
             sysprompt=SYSPROMPT,

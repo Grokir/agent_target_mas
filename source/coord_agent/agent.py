@@ -17,7 +17,7 @@ from json import loads as json_loads, JSONDecodeError
 from typing import Optional
 
 from agent_kernel.base_agent import kernel_init, send_prompt, memory_clear, DEFAULT_THREAD_ID
-from coord_agent.config import MODEL_NAME, SYSPROMPT, CODE_AGENT_ID, DB_AGENT_ID
+from coord_agent.config import LLAMA_URL, MODEL_NAME, SYSPROMPT, CODE_AGENT_ID, DB_AGENT_ID
 
 
 def _extract_json(content: str) -> Optional[dict]:
@@ -40,6 +40,7 @@ def _extract_json(content: str) -> Optional[dict]:
 class Coord_Agent:
     def __init__(self):
         self.__core = kernel_init(
+            url=LLAMA_URL,
             model_name=MODEL_NAME,
             tools=[],
             sysprompt=SYSPROMPT,
